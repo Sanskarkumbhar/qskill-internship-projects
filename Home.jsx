@@ -1,146 +1,197 @@
+ import { useEffect, useState } from "react";
+import { ArrowRight, Truck, RotateCcw, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
-import {
-  Search,
-  BriefcaseBusiness,
-  Users,
-  Building2,
-  ArrowRight,
-  CheckCircle2,
-} from "lucide-react";
+
+import { getProducts } from "../services/productService";
+import ProductCard from "../components/ProductCard";
+
+import "./Home.css";
 
 function Home() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const data = await getProducts();
+        setProducts(data);
+      } catch (error) {
+        console.error("Failed to load products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
+
+  const featuredProducts = products.slice(0, 4);
+
   return (
-    <main>
+    <main className="home-page">
+
       {/* Hero Section */}
-      <section className="hero-section">
+      <section className="home-hero">
         <div className="hero-content">
-          <div className="hero-badge">
-            <BriefcaseBusiness size={16} />
-            Find your next opportunity
-          </div>
+          <p className="hero-label">WELCOME TO SHOPORA</p>
 
           <h1>
-            Build Your Career.
-            <span> Find Your Future.</span>
+            Style that
+            <br />
+            speaks <span>for you.</span>
           </h1>
 
-          <p>
-            Discover internships, jobs, and career opportunities from
-            companies looking for talented people like you.
+          <p className="hero-description">
+            Discover modern fashion, footwear and accessories
+            designed for your everyday lifestyle.
           </p>
 
-          <div className="hero-buttons">
-            <Link to="/jobs" className="primary-btn">
-              Explore Jobs
-              <ArrowRight size={18} />
-            </Link>
+          <Link to="/shop" className="hero-button">
+            Shop Now
+            <ArrowRight size={19} />
+          </Link>
+        </div>
 
-            <Link to="/register" className="secondary-btn">
-              Create Account
-            </Link>
-          </div>
-
-          {/* Search Preview */}
-          <div className="search-box">
-            <div className="search-input">
-              <Search size={20} />
-              <span>Job title, skills, or keywords</span>
-            </div>
-
-            <div className="search-location">
-              <Building2 size={19} />
-              <span>Location</span>
-            </div>
-
-            <Link to="/jobs" className="search-btn">
-              Search Jobs
-            </Link>
+        <div className="hero-visual">
+          <div className="hero-circle">
+            SHOPORA
           </div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="stats-section">
-        <div className="stat-card">
-          <BriefcaseBusiness size={28} />
-          <div>
-            <h3>100+</h3>
-            <p>Job Opportunities</p>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <Building2 size={28} />
-          <div>
-            <h3>50+</h3>
-            <p>Companies</p>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <Users size={28} />
-          <div>
-            <h3>500+</h3>
-            <p>Job Seekers</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Why CareerHub */}
-      <section className="features-section">
+      {/* Categories */}
+      <section className="home-categories">
         <div className="section-heading">
-          <p>WHY CAREERHUB?</p>
-          <h2>Everything you need to find your next job</h2>
-          <span>
-            A simple platform connecting talented candidates with great
-            opportunities.
-          </span>
+          <div>
+            <p className="section-label">EXPLORE</p>
+            <h2>Shop by Category</h2>
+          </div>
+
+          <Link to="/shop" className="view-link">
+            View All <ArrowRight size={17} />
+          </Link>
         </div>
 
-        <div className="feature-grid">
-          <div className="feature-card">
-            <Search size={30} />
-            <h3>Find the Right Job</h3>
-            <p>
-              Search and explore jobs based on your skills, interests,
-              location, and career goals.
-            </p>
-          </div>
+        <div className="category-grid">
 
-          <div className="feature-card">
-            <Building2 size={30} />
-            <h3>Connect with Companies</h3>
-            <p>
-              Discover opportunities from companies looking for motivated
-              and talented candidates.
-            </p>
-          </div>
+          <Link to="/shop" className="category-card">
+            <span>01</span>
+            <h3>Men</h3>
+            <p>Modern everyday styles</p>
+          </Link>
 
-          <div className="feature-card">
-            <CheckCircle2 size={30} />
-            <h3>Easy Applications</h3>
-            <p>
-              Apply for jobs and keep track of your application status
-              from one convenient dashboard.
-            </p>
-          </div>
+          <Link to="/shop" className="category-card">
+            <span>02</span>
+            <h3>Women</h3>
+            <p>Elegant everyday fashion</p>
+          </Link>
+
+          <Link to="/shop" className="category-card">
+            <span>03</span>
+            <h3>Footwear</h3>
+            <p>Comfort meets style</p>
+          </Link>
+
+          <Link to="/shop" className="category-card">
+            <span>04</span>
+            <h3>Accessories</h3>
+            <p>Complete your look</p>
+          </Link>
+
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="cta-section">
+      {/* Featured Products */}
+      <section className="home-products">
+
+        <div className="section-heading">
+          <div>
+            <p className="section-label">SHOPORA PICKS</p>
+            <h2>Featured Products</h2>
+          </div>
+
+          <Link to="/shop" className="view-link">
+            View All <ArrowRight size={17} />
+          </Link>
+        </div>
+
+        {loading ? (
+          <div className="home-loading">
+            <p>Loading products...</p>
+          </div>
+        ) : featuredProducts.length === 0 ? (
+          <div className="home-loading">
+            <p>No products available.</p>
+          </div>
+        ) : (
+          <div className="product-grid">
+            {featuredProducts.map((product) => (
+              <ProductCard
+                key={product._id}
+                product={{
+                  ...product,
+                  id: product._id,
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+      </section>
+
+      {/* Why Choose Us */}
+      <section className="home-benefits">
+
+        <div className="benefit-card">
+          <Truck size={28} />
+
+          <div>
+            <h3>Fast Delivery</h3>
+            <p>Quick and reliable delivery to your doorstep.</p>
+          </div>
+        </div>
+
+        <div className="benefit-card">
+          <RotateCcw size={28} />
+
+          <div>
+            <h3>Easy Returns</h3>
+            <p>Simple and convenient return experience.</p>
+          </div>
+        </div>
+
+        <div className="benefit-card">
+          <ShieldCheck size={28} />
+
+          <div>
+            <h3>Secure Shopping</h3>
+            <p>Your shopping experience is safe and secure.</p>
+          </div>
+        </div>
+
+      </section>
+
+      {/* Promo Banner */}
+      <section className="home-promo">
+
         <div>
-          <h2>Ready to take the next step?</h2>
-          <p>
-            Create your account and start exploring opportunities today.
-          </p>
+          <p>SHOPORA COLLECTION</p>
+
+          <h2>
+            Find something
+            <br />
+            you'll love.
+          </h2>
         </div>
 
-        <Link to="/jobs" className="cta-btn">
-          Browse Jobs
-          <ArrowRight size={18} />
+        <Link to="/shop" className="promo-button">
+          Explore Collection
+          <ArrowRight size={19} />
         </Link>
+
       </section>
+
     </main>
   );
 }

@@ -1,8 +1,11 @@
-const bcrypt = require("bcryptjs");
+ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 
+// =============================
+// Generate JWT
+// =============================
 const generateToken = (user) => {
   return jwt.sign(
     {
@@ -16,17 +19,14 @@ const generateToken = (user) => {
   );
 };
 
-// REGISTER
+// =============================
+// Register User
+// =============================
 const registerUser = async (req, res) => {
   try {
-    const {
-      name,
-      email,
-      password,
-      role,
-      companyName,
-    } = req.body;
+    const { name, email, password } = req.body;
 
+    // Validation
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -41,6 +41,7 @@ const registerUser = async (req, res) => {
       });
     }
 
+    // Check existing user
     const existingUser = await User.findOne({
       email: email.toLowerCase(),
     });
@@ -52,31 +53,18 @@ const registerUser = async (req, res) => {
       });
     }
 
-    const allowedRoles = [
-      "jobseeker",
-      "employer",
-    ];
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const selectedRole = allowedRoles.includes(role)
-      ? role
-      : "jobseeker";
-
-    const hashedPassword = await bcrypt.hash(
-      password,
-      10
-    );
-
+    // Create user
     const user = await User.create({
       name,
       email: email.toLowerCase(),
       password: hashedPassword,
-      role: selectedRole,
-      companyName:
-        selectedRole === "employer"
-          ? companyName || ""
-          : "",
+      role: "user",
     });
 
+    // Generate token
     const token = generateToken(user);
 
     res.status(201).json({
@@ -88,14 +76,10 @@ const registerUser = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        companyName: user.companyName,
       },
     });
   } catch (error) {
-    console.error(
-      "Registration error:",
-      error
-    );
+    console.error("Registration error:", error);
 
     res.status(500).json({
       success: false,
@@ -105,19 +89,22 @@ const registerUser = async (req, res) => {
   }
 };
 
-// LOGIN
+// =============================
+// Login User
+// =============================
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Validation
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message:
-          "Please provide email and password.",
+        message: "Please provide email and password.",
       });
     }
 
+    // Find user
     const user = await User.findOne({
       email: email.toLowerCase(),
     });
@@ -129,6 +116,7 @@ const loginUser = async (req, res) => {
       });
     }
 
+    // Compare password
     const passwordMatch = await bcrypt.compare(
       password,
       user.password
@@ -141,6 +129,7 @@ const loginUser = async (req, res) => {
       });
     }
 
+    // Generate token
     const token = generateToken(user);
 
     res.status(200).json({
@@ -152,14 +141,10 @@ const loginUser = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        companyName: user.companyName,
       },
     });
   } catch (error) {
-    console.error(
-      "Login error:",
-      error
-    );
+    console.error("Login error:", error);
 
     res.status(500).json({
       success: false,

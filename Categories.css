@@ -1,0 +1,162 @@
+.categories-section {
+  padding: 90px 25px;
+  background: #ffffff;
+}
+
+.categories-container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Heading */
+
+.section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 45px;
+}
+
+.section-label {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #777;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: 38px;
+  letter-spacing: -1.5px;
+  color: #111;
+}
+
+.section-description {
+  max-width: 260px;
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Grid */
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+/* Card */
+
+.category-card {
+  min-height: 250px;
+  padding: 25px;
+
+  background: #f5f5f2;
+  border: 1px solid #eeeeee;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  position: relative;
+  overflow: hidden;
+
+  transition: 0.3s;
+}
+
+.category-card:hover {
+  background: #111;
+  color: #fff;
+  transform: translateY(-5px);
+}
+
+.category-number {
+  font-size: 12px;
+  color: #888;
+}
+
+.category-card:hover .category-number {
+  color: #aaa;
+}
+
+.category-content h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+}
+
+.category-content p {
+  margin: 0;
+  color: #777;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.category-card:hover .category-content p {
+  color: #bbb;
+}
+
+/* Arrow */
+
+.category-arrow {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+
+  width: 38px;
+  height: 38px;
+
+  border: 1px solid #ddd;
+  border-radius: 50%;
+
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #222;
+
+  cursor: pointer;
+}
+
+.category-card:hover .category-arrow {
+  border-color: #555;
+  color: white;
+}
+
+/* Tablet */
+
+@media (max-width: 900px) {
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .categories-section {
+    padding: 65px 18px;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .section-heading h2 {
+    font-size: 32px;
+  }
+
+  .categories-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .category-card {
+    min-height: 210px;
+  }
+}

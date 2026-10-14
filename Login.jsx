@@ -1,21 +1,42 @@
  import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BriefcaseBusiness, Mail, Lock, LogIn } from "lucide-react";
+import { Mail, Lock, LogIn } from "lucide-react";
+
 import { loginUser } from "../services/authService";
+
+import "./Login.css";
 
 function Login() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormData((current) => ({
+      ...current,
+      [name]: value,
+    }));
 
     setError("");
+    setSuccess("");
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    setError("");
+    setSuccess("");
+
+    const { email, password } = formData;
 
     if (!email || !password) {
       setError("Please enter your email and password.");
@@ -25,84 +46,165 @@ function Login() {
     try {
       setLoading(true);
 
-      const data = await loginUser(email, password);
+      const data = await loginUser({
+        email,
+        password,
+      });
 
+      // Store JWT token
       localStorage.setItem("token", data.token);
+
+      // Store user information
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      if (data.user.role === "employer") {
-        navigate("/applications");
-      } else {
-        navigate("/jobs");
-      }
-    } catch (err) {
-      setError(err.message || "Login failed.");
+      setSuccess("Login successful!");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 700);
+    } catch (error) {
+      setError(error.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="auth-page">
-      <div className="auth-card">
-        <div className="auth-icon">
-          <BriefcaseBusiness size={28} />
+    <div className="auth-page">
+      <div className="auth-container">
+
+        {/* LEFT SIDE */}
+        <div className="auth-info">
+          <div className="auth-logo">
+            SHOP<span>ORA</span>
+          </div>
+
+          <h1>
+            Welcome back
+            <br />
+            to SHOPORA.
+          </h1>
+
+          <p>
+            Login to continue your personalized
+            shopping experience.
+          </p>
+
+          <div className="auth-benefits">
+            <div className="auth-benefit">
+              <LogIn size={20} />
+              <span>Quick and secure login</span>
+            </div>
+
+            <div className="auth-benefit">
+              <Lock size={20} />
+              <span>JWT secured authentication</span>
+            </div>
+
+            <div className="auth-benefit">
+              <Mail size={20} />
+              <span>Access your SHOPORA account</span>
+            </div>
+          </div>
         </div>
 
-        <h1>Welcome Back</h1>
+        {/* RIGHT SIDE */}
+        <div className="auth-form-container">
 
-        <p className="auth-subtitle">
-          Login to continue to CareerHub
-        </p>
-
-        {error && (
-          <div className="auth-error">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit}>
-          <label>Email Address</label>
-
-          <div className="auth-input">
-            <Mail size={18} />
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+          <div className="auth-form-header">
+            <h2>Welcome Back</h2>
+            <p>
+              Enter your account details to continue.
+            </p>
           </div>
 
-          <label>Password</label>
+          {error && (
+            <div className="auth-message error">
+              {error}
+            </div>
+          )}
 
-          <div className="auth-input">
-            <Lock size={18} />
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+          {success && (
+            <div className="auth-message success">
+              {success}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit}>
+
+            {/* EMAIL */}
+            <div className="form-group">
+              <label htmlFor="email">
+                Email Address
+              </label>
+
+              <div className="input-wrapper">
+                <Mail size={18} />
+
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  autoComplete="email"
+                  disabled={loading}
+                />
+              </div>
+            </div>
+
+            {/* PASSWORD */}
+            <div className="form-group">
+              <label htmlFor="password">
+                Password
+              </label>
+
+              <div className="input-wrapper">
+                <Lock size={18} />
+
+                <input
+                  id="password"
+                  type="password"
+                  name="password"
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  autoComplete="current-password"
+                  disabled={loading}
+                />
+              </div>
+            </div>
+
+            {/* LOGIN BUTTON */}
+            <button
+              type="submit"
+              className="auth-submit-btn"
+              disabled={loading}
+            >
+              {loading ? (
+                "Logging in..."
+              ) : (
+                <>
+                  <LogIn size={18} />
+                  Login
+                </>
+              )}
+            </button>
+
+          </form>
+
+          <div className="auth-switch">
+            <span>Don't have an account?</span>
+
+            <Link to="/register">
+              Create Account
+            </Link>
           </div>
 
-          <button
-            type="submit"
-            className="auth-submit"
-            disabled={loading}
-          >
-            <LogIn size={18} />
-
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
-
-        <p className="auth-footer">
-          Don't have an account?{" "}
-          <Link to="/register">Create one</Link>
-        </p>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }
 

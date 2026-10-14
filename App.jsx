@@ -1,40 +1,64 @@
  import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import Categories from "./components/Categories";
+import Products from "./components/Products";
 
 import Home from "./pages/Home";
-import Jobs from "./pages/Jobs";
-import JobDetails from "./pages/JobDetails";
+import Shop from "./pages/Shop";
+import ProductDetails from "./pages/ProductDetails";
+import Cart from "./pages/Cart";
+import Wishlist from "./pages/Wishlist";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import PostJob from "./pages/PostJob";
-import MyApplications from "./pages/MyApplications";
-import EmployerApplications from "./pages/EmployerApplications";
+import Checkout from "./pages/Checkout";
+import MyOrders from "./pages/MyOrders";
+
+import { CartProvider } from "./context/CartContext";
+import { WishlistProvider } from "./context/WishlistContext";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminProducts from "./pages/AdminProducts";
+import AdminOrders from "./pages/AdminOrders";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
+    <CartProvider>
+      <WishlistProvider>
+        <BrowserRouter>
+          <Navbar />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/jobs" element={<Jobs />} />
-        <Route path="/jobs/:id" element={<JobDetails />} />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  <Hero />
+                  <Categories />
+                  <Products />
+                  <Home />
+                </>
+              }
+            />
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-
-        <Route path="/post-job" element={<PostJob />} />
-        <Route
-          path="/my-applications"
-          element={<MyApplications />}
-        />
-        <Route
-          path="/applications"
-          element={<EmployerApplications />}
-        />
-      </Routes>
-    </BrowserRouter>
+            <Route path="/shop" element={<Shop />} />
+            <Route
+              path="/product/:id"
+              element={<ProductDetails />}
+            />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/my-orders" element={<MyOrders />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/products" element={<AdminProducts />} />
+            <Route path="/admin/orders" element={<AdminOrders />} />
+          </Routes>
+        </BrowserRouter>
+      </WishlistProvider>
+    </CartProvider>
   );
 }
 
