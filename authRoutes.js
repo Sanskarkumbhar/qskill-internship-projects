@@ -1,4 +1,4 @@
- const express = require("express");
+const express = require("express");
 
 const {
   registerUser,
@@ -8,6 +8,7 @@ const {
 const router = express.Router();
 
 router.post("/register", registerUser);
+
 router.post("/login", loginUser);
 
 module.exports = router;

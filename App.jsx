@@ -1,22 +1,41 @@
- 
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import Navbar from "./components/Navbar";
+
+import Home from "./pages/Home";
+import Jobs from "./pages/Jobs";
+import JobDetails from "./pages/JobDetails";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Chat from "./pages/Chat";
+import PostJob from "./pages/PostJob";
+import MyApplications from "./pages/MyApplications";
+import EmployerApplications from "./pages/EmployerApplications";
 
-import "./App.css";
-
-export default function App() {
+function App() {
   return (
     <BrowserRouter>
+      <Navbar />
+
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/jobs" element={<Jobs />} />
+        <Route path="/jobs/:id" element={<JobDetails />} />
+
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+
+        <Route path="/post-job" element={<PostJob />} />
+        <Route
+          path="/my-applications"
+          element={<MyApplications />}
+        />
+        <Route
+          path="/applications"
+          element={<EmployerApplications />}
+        />
       </Routes>
     </BrowserRouter>
   );
 }
+
+export default App;

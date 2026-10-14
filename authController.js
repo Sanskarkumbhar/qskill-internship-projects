@@ -1,13 +1,13 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+
 const User = require("../models/User");
 
-// Generate JWT token
 const generateToken = (user) => {
   return jwt.sign(
     {
       userId: user._id,
-      email: user.email,
+      role: user.role,
     },
     process.env.JWT_SECRET,
     {
@@ -16,15 +16,21 @@ const generateToken = (user) => {
   );
 };
 
-// Register
+// REGISTER
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const {
+      name,
+      email,
+      password,
+      role,
+      companyName,
+    } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Name, email and password are required.",
+        message: "Please provide name, email and password.",
       });
     }
 
@@ -35,21 +41,40 @@ const registerUser = async (req, res) => {
       });
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({
+      email: email.toLowerCase(),
+    });
 
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: "User already exists.",
+        message: "User already exists with this email.",
       });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const allowedRoles = [
+      "jobseeker",
+      "employer",
+    ];
+
+    const selectedRole = allowedRoles.includes(role)
+      ? role
+      : "jobseeker";
+
+    const hashedPassword = await bcrypt.hash(
+      password,
+      10
+    );
 
     const user = await User.create({
       name,
-      email,
+      email: email.toLowerCase(),
       password: hashedPassword,
+      role: selectedRole,
+      companyName:
+        selectedRole === "employer"
+          ? companyName || ""
+          : "",
     });
 
     const token = generateToken(user);
@@ -62,20 +87,25 @@ const registerUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        status: user.status,
+        role: user.role,
+        companyName: user.companyName,
       },
     });
   } catch (error) {
-    console.error("Register error:", error.message);
+    console.error(
+      "Registration error:",
+      error
+    );
 
     res.status(500).json({
       success: false,
-      message: "Server error during registration.",
+      message: "Registration failed.",
+      error: error.message,
     });
   }
 };
 
-// Login
+// LOGIN
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -83,11 +113,14 @@ const loginUser = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Email and password are required.",
+        message:
+          "Please provide email and password.",
       });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      email: email.toLowerCase(),
+    });
 
     if (!user) {
       return res.status(401).json({
@@ -96,12 +129,12 @@ const loginUser = async (req, res) => {
       });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(
+    const passwordMatch = await bcrypt.compare(
       password,
       user.password
     );
 
-    if (!isPasswordCorrect) {
+    if (!passwordMatch) {
       return res.status(401).json({
         success: false,
         message: "Invalid email or password.",
@@ -118,15 +151,20 @@ const loginUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        status: user.status,
+        role: user.role,
+        companyName: user.companyName,
       },
     });
   } catch (error) {
-    console.error("Login error:", error.message);
+    console.error(
+      "Login error:",
+      error
+    );
 
     res.status(500).json({
       success: false,
-      message: "Server error during login.",
+      message: "Login failed.",
+      error: error.message,
     });
   }
 };

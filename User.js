@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
@@ -22,20 +23,25 @@ const userSchema = new mongoose.Schema(
       minlength: 6,
     },
 
+    role: {
+      type: String,
+      enum: ["jobseeker", "employer", "admin"],
+      default: "jobseeker",
+    },
+
     profileImage: {
       type: String,
       default: "",
     },
 
-    status: {
-      type: String,
-      enum: ["online", "offline"],
-      default: "offline",
+    skills: {
+      type: [String],
+      default: [],
     },
 
-    lastSeen: {
-      type: Date,
-      default: null,
+    companyName: {
+      type: String,
+      default: "",
     },
   },
   {

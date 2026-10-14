@@ -1,40 +1,42 @@
-
-import { useState } from "react";
+ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { BriefcaseBusiness, Mail, Lock, LogIn } from "lucide-react";
+import { loginUser } from "../services/authService";
 
-const API_URL = "http://localhost:5002/api";
+function Login() {
+  const navigate = useNavigate();
 
-export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setError("");
-    setLoading(true);
+
+    if (!email || !password) {
+      setError("Please enter your email and password.");
+      return;
+    }
 
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      setLoading(true);
 
-      const data = await response.json();
+      const data = await loginUser(email, password);
 
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || "Login failed.");
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      if (data.user.role === "employer") {
+        navigate("/applications");
+      } else {
+        navigate("/jobs");
       }
-
-      localStorage.setItem("chatToken", data.token);
-      localStorage.setItem("chatUser", JSON.stringify(data.user));
-
-      navigate("/chat");
     } catch (err) {
-      setError(err.message || "Unable to connect to the server.");
+      setError(err.message || "Login failed.");
     } finally {
       setLoading(false);
     }
@@ -42,42 +44,66 @@ export default function Login() {
 
   return (
     <main className="auth-page">
-      <form className="auth-card" onSubmit={handleSubmit}>
-        <h1>Welcome back</h1>
-        <p>Sign in to continue your conversations.</p>
+      <div className="auth-card">
+        <div className="auth-icon">
+          <BriefcaseBusiness size={28} />
+        </div>
 
-        {error && <div className="error-message">{error}</div>}
+        <h1>Welcome Back</h1>
 
-        <label htmlFor="email">Email address</label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@example.com"
-          autoComplete="email"
-          required
-        />
-
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter your password"
-          autoComplete="current-password"
-          required
-        />
-
-        <button type="submit" disabled={loading}>
-          {loading ? "Signing in..." : "Sign in"}
-        </button>
-
-        <p className="auth-switch">
-          Don't have an account? <Link to="/register">Create one</Link>
+        <p className="auth-subtitle">
+          Login to continue to CareerHub
         </p>
-      </form>
+
+        {error && (
+          <div className="auth-error">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <label>Email Address</label>
+
+          <div className="auth-input">
+            <Mail size={18} />
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <label>Password</label>
+
+          <div className="auth-input">
+            <Lock size={18} />
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="auth-submit"
+            disabled={loading}
+          >
+            <LogIn size={18} />
+
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
+
+        <p className="auth-footer">
+          Don't have an account?{" "}
+          <Link to="/register">Create one</Link>
+        </p>
+      </div>
     </main>
   );
 }
+
+export default Login;
