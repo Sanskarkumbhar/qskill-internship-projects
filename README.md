@@ -1,85 +1,73 @@
- # Connect — Real-Time Chat Frontend
+ # QSkill Internship Projects
 
-## Project Overview
+A collection of three full-stack web development projects developed as part of my QSkill internship.
 
-Connect is a responsive real-time chat application frontend built using React and Vite. It allows registered users to sign in, find other users, open conversations, and exchange messages instantly.
+## Projects
 
-## Technologies Used
+### 1. E-Commerce Website
+A web application for browsing products and managing an online shopping experience.
 
-- React
-- Vite
-- JavaScript
-- React Router DOM
-- Socket.IO Client
-- Lucide React
-- CSS
-
-## Features
-
+**Features**
+- Product browsing and details
+- Shopping cart and wishlist
 - User registration and login
-- JWT-based authentication
-- Search registered users
-- Create and open conversations
-- Send and receive messages in real time
-- View previous messages
+- Checkout interface
+
+**Technologies:** React, JavaScript, CSS, Node.js, Express.js, MongoDB (where implemented).
+
+### 2. Job Portal
+A web application for viewing and exploring job opportunities.
+
+**Features**
+- Job listings
+- Individual job details
+- Backend API integration
+
+**Technologies:** React, JavaScript, Node.js, Express.js, REST APIs (where implemented).
+
+### 3. Real-Time Chat Application
+A web application for real-time communication between users.
+
+**Features**
+- User authentication
+- Conversations and message history
+- Real-time messaging
 - Responsive chat interface
-- Logout functionality
 
-## Requirements
+**Technologies:** React, JavaScript, Node.js, Express.js, REST APIs, Socket.IO (where implemented).
 
-- Node.js and npm
-- The Project 3 backend running on port 5002
+## Installation and Setup
 
-## Installation
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/Sansarkumbhar/qskill-internship-projects.git
+   ```
 
-Open a terminal in the `frontend` directory and run:
+2. Open the folder of the project you want to run.
 
-```bash
-npm install
-npm run dev
-```
+3. Install dependencies in the relevant frontend and backend directories:
+   ```bash
+   npm install
+   ```
 
-Open the local URL displayed by Vite, usually:
+4. Configure environment variables using a local `.env` file. Never commit credentials or secret keys.
 
-http://localhost:5173
+5. Start the frontend and backend using the scripts defined in each project's `package.json`.
 
-## Backend Connection
+## Repository Structure
 
-The frontend communicates with the backend REST API at:
+- `Project-1-e-commerce website/` — E-Commerce Website
+- `Project-2-Job-Portal/` — Job Portal
+- `Project-3-Real-Time-Chat/` — Real-Time Chat Application
 
-`http://localhost:5002/api`
+## Learning Outcomes
 
-Socket.IO connects to:
+- Frontend development with React
+- Backend development with Node.js and Express.js
+- REST API integration
+- Database integration where implemented
+- Authentication and real-time communication concepts
 
-`http://localhost:5002`
+## Author
 
-Make sure the backend and MongoDB connection are running before testing the application.
-
-## Main Pages
-
-- `/register` — Create an account
-- `/login` — Sign in
-- `/chat` — Find users and exchange messages
-
-## Project Structure
-
-```text
-frontend/
-├── public/
-├── src/
-│   ├── pages/
-│   │   ├── Login.jsx
-│   │   ├── Register.jsx
-│   │   └── Chat.jsx
-│   ├── utils/
-│   │   └── socket.js
-│   ├── App.jsx
-│   ├── App.css
-│   └── main.jsx
-├── package.json
-└── README.md
-```
-
-## Developer Notes
-
-This frontend is part of the QSkill Full Stack Development internship project. The backend handles authentication, conversations, and message storage, while Socket.IO provides real-time message delivery.
+Developed as part of my QSkill internship.
