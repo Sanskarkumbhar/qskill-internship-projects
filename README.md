@@ -1,16 +1,85 @@
-# React + Vite
+ # Connect — Real-Time Chat Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Overview
 
-Currently, two official plugins are available:
+Connect is a responsive real-time chat application frontend built using React and Vite. It allows registered users to sign in, find other users, open conversations, and exchange messages instantly.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Technologies Used
 
-## React Compiler
+- React
+- Vite
+- JavaScript
+- React Router DOM
+- Socket.IO Client
+- Lucide React
+- CSS
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+- User registration and login
+- JWT-based authentication
+- Search registered users
+- Create and open conversations
+- Send and receive messages in real time
+- View previous messages
+- Responsive chat interface
+- Logout functionality
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Requirements
+
+- Node.js and npm
+- The Project 3 backend running on port 5002
+
+## Installation
+
+Open a terminal in the `frontend` directory and run:
+
+```bash
+npm install
+npm run dev
+```
+
+Open the local URL displayed by Vite, usually:
+
+http://localhost:5173
+
+## Backend Connection
+
+The frontend communicates with the backend REST API at:
+
+`http://localhost:5002/api`
+
+Socket.IO connects to:
+
+`http://localhost:5002`
+
+Make sure the backend and MongoDB connection are running before testing the application.
+
+## Main Pages
+
+- `/register` — Create an account
+- `/login` — Sign in
+- `/chat` — Find users and exchange messages
+
+## Project Structure
+
+```text
+frontend/
+├── public/
+├── src/
+│   ├── pages/
+│   │   ├── Login.jsx
+│   │   ├── Register.jsx
+│   │   └── Chat.jsx
+│   ├── utils/
+│   │   └── socket.js
+│   ├── App.jsx
+│   ├── App.css
+│   └── main.jsx
+├── package.json
+└── README.md
+```
+
+## Developer Notes
+
+This frontend is part of the QSkill Full Stack Development internship project. The backend handles authentication, conversations, and message storage, while Socket.IO provides real-time message delivery.
